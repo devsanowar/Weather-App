@@ -1,4 +1,6 @@
 <script setup>
+import { useWeatherStore } from './stores/weather';
+const weatherStore = useWeatherStore();
 
 </script>
 
@@ -7,35 +9,35 @@
       <div class="wraper">
           <!--Search box -->
           <div class="search-box">
-              <input type="text" class="search-field" placeholder="Search...">
+              <input type="text" v-model="weatherStore.location_query" @keypress="weatherStore.fatchWeather" class="search-field" placeholder="Search...">
           </div>
 
           <!-- Weather Info -->
-          <div class="weather-info">
+          <div class="weather-info" v-if="weatherStore.weather?.main">
               <div class="location-box">
-                  <div class="location">Dhaka</div>
+                  <div class="location">{{ weatherStore.weather.name }} / {{ weatherStore.weather.sys?.country }}</div>
                   <div class="date">15-03-2026</div>
               </div>
 
               <div class="weather-box">
-                  <div class="temp">22°C</div>
-                  <div class="weather">abcd</div>
+                  <div class="temp">{{ weatherStore.weather.main?.temp }}°C</div>
+                  <div class="weather" >  {{ weatherStore.weather.weather[0]?.description || 'Loading...' }} </div>
                   <div class="icon">
                     <img src="https://openweathermap.org/payload/api/media/file/10d@2x.png" alt="">
                   </div>
               </div>
               <div class="other-info">
                   <div class="info">
-                      <h4>Pollen</h4>
-                      <p>28</p>
+                      <h4>Wind</h4>
+                      <p>Speed : {{ weatherStore.weather.wind?.speed }}</p>
                   </div>
                   <div class="info">
                       <h4>Pressure</h4>
-                      <p>28</p>
+                      <p>{{ weatherStore.weather.main?.pressure }}MB</p>
                   </div>
                   <div class="info">
-                      <h4>Humanity</h4>
-                      <p>28%</p>
+                      <h4>Humidity</h4>
+                      <p>{{ weatherStore.weather.main?.humidity }}%</p>
                   </div>
               </div>
           </div>
@@ -116,7 +118,7 @@
 	display: inline-block;
 	padding: 10px 20px;
 	color: #fff;
-	font-size: 100px;
+	font-size: 70px;
 	font-weight: 700;
 	text-shadow: 2px 2px rgba(0, 0, 0, 0.12);
 	background-color: rgba(255, 255, 255, 0.25);
